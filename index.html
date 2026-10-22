@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>论说文 · 反方理由组合器</title>
+<style>
+:root{
+  --bg:#f5f1e8; --bg-soft:#ece5d6; --surface:#fffdf8; --surface-2:#faf6ec;
+  --ink:#27221a; --ink-2:#6c6354; --ink-3:#a89e8b; --line:#e5ddcc; --line-2:#f0eadb;
+  --accent:#b5483c; --accent-soft:#f4e3de; --green:#3f826d; --green-soft:#e0ede7;
+  --gold:#a9783f; --gold-soft:#f3e7d3;
+  --shadow:0 1px 2px rgba(46,38,24,.05),0 12px 32px rgba(46,38,24,.08);
+  --serif:"Songti SC","Noto Serif SC","STSong","SimSun","Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#16130d; --bg-soft:#1f1a12; --surface:#211c14; --surface-2:#282218;
+  --ink:#ece4d4; --ink-2:#b3a78f; --ink-3:#7f7461; --line:#342c1e; --line-2:#2c2519;
+  --accent:#d47768; --accent-soft:#3a2520; --green:#78b69c; --green-soft:#203029;
+  --gold:#c79a55; --gold-soft:#372a17;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 32px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.wrap{max-width:640px;margin:0 auto;min-height:100vh;padding:18px 16px 46px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.brand h1{font-family:var(--serif);font-size:21px;letter-spacing:2px;font-weight:700}
+.brand p{font-size:12px;color:var(--ink-3);margin-top:3px;letter-spacing:1px}
+.icon-btn{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:var(--surface-2);display:grid;place-items:center;color:var(--ink-2)}
+.icon-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+.section{margin-bottom:20px}
+.section-h{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.section-h h3{font-size:14px;font-weight:700;letter-spacing:2px;color:var(--ink-2)}
+.section-h .hint{margin-left:auto;font-size:12px;color:var(--ink-3)}
+
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.chip{position:relative;padding:14px 10px;border-radius:13px;border:1px solid var(--line);background:var(--surface);font-family:var(--serif);font-size:16px;font-weight:700;letter-spacing:1px;box-shadow:var(--shadow);transition:all .13s}
+.chip:active{transform:scale(.96)}
+.chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.chip .badge{position:absolute;top:-7px;right:-5px;width:20px;height:20px;border-radius:99px;background:var(--gold);color:#fff;font-size:11px;font-weight:700;display:none;place-items:center;font-family:var(--sans)}
+.chip.on .badge{display:grid}
+
+.controls{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.btn{padding:10px 16px;border-radius:11px;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--surface);transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.06);color:#fff}
+
+.out{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+.out-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.out-head .tag{font-size:11px;font-weight:700;letter-spacing:1px;padding:3px 10px;border-radius:99px}
+.out-head .tag.fan{color:var(--red,var(--accent));background:var(--accent-soft)}
+.out-head .tag.tui{color:var(--green);background:var(--green-soft)}
+.out-head .cnt{margin-left:auto;font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.out-head .copy{font-size:12px;color:var(--ink-2);padding:4px 10px;border-radius:8px;border:1px solid var(--line)}
+.out-head .copy:hover{color:var(--accent);border-color:var(--accent)}
+.out-text{font-family:var(--serif);font-size:16px;line-height:1.9;color:var(--ink);text-align:justify}
+.empty-out{color:var(--ink-3);font-size:14px;line-height:1.8;padding:6px 0}
+
+.detail{background:var(--surface-2);border:1px solid var(--line-2);border-radius:14px;padding:14px;margin-top:6px}
+.detail summary{font-size:13px;color:var(--ink-2);font-weight:600;cursor:pointer;letter-spacing:1px}
+.detail .row{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.detail .row:first-of-type{margin-top:0;padding-top:0;border-top:none}
+.detail .kw{font-family:var(--serif);font-size:16px;font-weight:700;margin-bottom:6px}
+.detail .lbl{font-size:11px;color:var(--ink-3);letter-spacing:1px;margin-bottom:4px}
+.detail .lbl.f{color:var(--accent)} .detail .lbl.t{color:var(--green)}
+.detail .txt{font-family:var(--serif);font-size:14px;line-height:1.8;color:var(--ink);text-align:justify}
+.footer{text-align:center;color:var(--ink-3);font-size:11px;margin-top:26px;letter-spacing:1px}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:10px 20px;border-radius:99px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:all .3s;z-index:100;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width:420px){.chips{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><h1>反方理由 · 组合器</h1><p>9 个反方理由，任选 2–3 个自动拼段</p></div>
+    <button class="icon-btn" id="themeBtn" aria-label="主题">
+      <svg id="icSun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>
+      <svg id="icMoon" viewBox="0 0 24 24" style="display:none"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </div>
+
+  <div class="section">
+    <div class="section-h"><h3>选择理由</h3><span class="hint" id="selHint">已选 0 / 3</span></div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div class="controls">
+    <button class="btn primary" id="randBtn">🎲 随机 2–3 个</button>
+    <button class="btn" id="clearBtn">清空</button>
+  </div>
+
+  <div class="out" id="fanOut">
+    <div class="out-head"><span class="tag fan">反方观点 · 约 120 字</span><span class="cnt" id="fanCnt"></span><button class="copy" id="fanCopy">复制</button></div>
+    <div class="out-text" id="fanText"><span class="empty-out">点上面的理由（选 2–3 个），这里自动生成反方段。</span></div>
+  </div>
+  <div class="out" id="tuiOut">
+    <div class="out-head"><span class="tag tui">推翻反方 · 约 160 字</span><span class="cnt" id="tuiCnt"></span><button class="copy" id="tuiCopy">复制</button></div>
+    <div class="out-text" id="tuiText"><span class="empty-out">生成的反方段对应的推翻段会显示在这里。</span></div>
+  </div>
+
+  <details class="detail" id="detail">
+    <summary>查看选中理由的完整话术（含全部短语）</summary>
+    <div id="detailBody"><div class="empty-out">先选 2–3 个理由。</div></div>
+  </details>
+
+  <div class="footer">论说文 · 反方段写作助手</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const REASONS = [
+  {kw:'缺内部资源', fan:'我们没钱、没技术、没人才，资金链紧张、技术储备空白、专业团队缺失、研发力量匮乏', tui:'资源不足，正好干中学、边干边学，借船出海、整合资源，在行动中积累、小步快跑、轻量化起步', fanFull:'没钱、没技术、没人才；资金链紧张、技术储备空白、专业团队缺失、研发力量匮乏、人力成本高', tuiFull:'干中学、边干边学；借船出海、整合资源；在行动中积累、小步快跑、轻量化起步'},
+  {kw:'缺外部条件', fan:'政策不明、市场不成熟、行业规范空白，配套产业链不完善、基础设施落后、消费习惯未养成', tui:'条件欠缺，正好行动倒逼、用成绩换政策，以点带面、创造发展环境，做行业的拓荒者', fanFull:'政策不明、市场不成熟、行业规范空白；配套产业链不完善、基础设施落后、消费习惯未养成', tuiFull:'行动倒逼、用成绩换政策；以点带面、创造发展环境、做行业拓荒者'},
+  {kw:'怕成本', fan:'投入太大、不划算，前期投入高昂、回本周期漫长，隐性成本也不少', tui:'怕成本，就要算大账、看重长期价值，接受战略性亏损，今日投入换取长期收益，短期省钱反而增加后期支出', fanFull:'投入太大、不划算；前期投入高昂、回本周期漫长、隐性成本多', tuiFull:'算大账、看重长期价值；接受战略性亏损，今日投入换长期收益，短期省钱反而增加后期支出'},
+  {kw:'怕失败', fan:'万一失败了怎么办？投入全部打水漂，白白浪费时间精力，还可能赔上个人声誉', tui:'怕失败，须知风险藏机遇，快速试错、最小可行性先行，停滞风险更大，失败是学费、成功是熬出来的', fanFull:'万一失败了怎么办；投入全部打水漂、浪费时间精力、个人声誉受损', tuiFull:'风险藏机遇、快速试错、最小可行性；停滞风险更大，失败是学费、成功是熬出来的'},
+  {kw:'怕舆论', fan:'怕被骂、怕被排挤，同行非议、大众不理解、网络负面评价，亲友反对、群体孤立、动机被曲解', tui:'舆论有杂音，就用结果说话、以行动证明自己，坚守本心、不被外界杂音干扰', fanFull:'怕被骂、怕被排挤；同行非议、大众不理解、网络负面评价；亲友反对、群体孤立、动机被曲解', tuiFull:'用结果说话，行动是最好的解释；坚守本心、不被外界杂音干扰'},
+  {kw:'难执行', fan:'制度方案难以落地，团队松散推诿、流程繁杂，基层抵触变革、员工主观积极性不足', tui:'难执行，就完善配套机制、权责对等、简化流程、制度保障，拆分目标、分步落地', fanFull:'制度方案难以落地，团队松散推诿、流程繁杂、基层抵触变革、员工主观积极性不足', tuiFull:'完善配套机制、权责对等、简化流程、制度保障；拆分目标、分步落地'},
+  {kw:'难协同', fan:'意见分歧、沟通不畅，部门利益冲突、认知差异大，信息不互通、彼此不信任', tui:'难协同，就求同存异、寻找共同目标、换位思考共情，先解决情绪再沟通', fanFull:'意见分歧、沟通不畅；部门利益冲突、认知差异大、信息不互通、互不信任', tuiFull:'求同存异、寻找共同目标、换位思考共情；先解决情绪再沟通'},
+  {kw:'难服众', fan:'被质疑、缺乏话语权，资历不足、下属不认可，方案说服力低、难以统筹全局', tui:'难服众，就以贡献换权威、以德服人、用专业服人，用结果证明自己、价值引领', fanFull:'被质疑、失控感；资历不足、下属不认可、话语权弱、方案说服力低、难以统筹', tuiFull:'贡献换权威、以德服人、用专业服人；用结果证明自己、价值引领'},
+  {kw:'难改变', fan:'长期沿用固有经验，现有模式运转稳定，变革存在未知风险、调整阻力巨大', tui:'难改变，须知经验只代表过去，不改变就被淘汰；拥抱变化、自我颠覆、与时俱进，方能主动破局', fanFull:'长期沿用固有经验，现有模式运转稳定，变革存在未知风险、调整阻力巨大', tuiFull:'经验只代表过去、不改变就被淘汰；拥抱变化、自我颠覆、与时俱进、主动破局'}
+];
+
+const $ = s => document.querySelector(s);
+let sel = []; // 选中理由的索引（按点选顺序）
+let theme = localStorage.getItem('fanzuhe_theme') || 'light';
+
+function renderChips(){
+  $('#chips').innerHTML = REASONS.map((r,i)=>{
+    const p = sel.indexOf(i);
+    return `<button class="chip ${p>=0?'on':''}" data-i="${i}">${r.kw}<span class="badge">${p+1}</span></button>`;
+  }).join('');
+  $('#selHint').textContent = '已选 ' + sel.length + ' / 3';
+}
+function build(){
+  const sels = sel.map(i=>REASONS[i]);
+  if(sels.length < 2){
+    $('#fanText').innerHTML = '<span class="empty-out">再选 1–2 个理由（共 2–3 个）。</span>';
+    $('#tuiText').innerHTML = '<span class="empty-out">生成的反方段对应的推翻段会显示在这里。</span>';
+    $('#fanCnt').textContent = ''; $('#tuiCnt').textContent = '';
+    $('#detailBody').innerHTML = '<div class="empty-out">先选 2–3 个理由。</div>';
+    return;
+  }
+  const fan = '有人会说，' + sels.map(r=>r.fan).join('；') + '。';
+  const tui = '其实不然。' + sels.map(r=>r.tui).join('；') + '。唯有如此，方能化阻力为动力、变压力为机遇。';
+  $('#fanText').textContent = fan;
+  $('#tuiText').textContent = tui;
+  $('#fanCnt').textContent = '共 ' + fan.length + ' 字';
+  $('#tuiCnt').textContent = '共 ' + tui.length + ' 字';
+  $('#detailBody').innerHTML = sels.map(r=>`
+    <div class="row">
+      <div class="kw">${r.kw}</div>
+      <div class="lbl f">反方 · 顾虑</div><div class="txt">${r.fanFull}</div>
+      <div class="lbl t" style="margin-top:8px">推翻 · 话术</div><div class="txt">${r.tuiFull}</div>
+    </div>`).join('');
+}
+function toggle(i){
+  const p = sel.indexOf(i);
+  if(p >= 0){ sel.splice(p,1); }
+  else {
+    if(sel.length >= 3){ toast('最多选 3 个'); return; }
+    sel.push(i);
+  }
+  renderChips(); build();
+}
+function randomPick(){
+  sel = [];
+  const n = Math.random() < 0.5 ? 2 : 3;
+  const idx = [0,1,2,3,4,5,6,7,8];
+  for(let k=0;k<n;k++){ const j = Math.floor(Math.random()*idx.length); sel.push(idx.splice(j,1)[0]); }
+  renderChips(); build();
+}
+function clearSel(){ sel = []; renderChips(); build(); }
+
+function copyText(t, label){
+  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast(label+'已复制')).catch(()=>toast('复制失败'));
+}
+let toastTimer;
+function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),1500); }
+
+$('#chips').addEventListener('click', e=>{
+  const c = e.target.closest('.chip'); if(c) toggle(parseInt(c.dataset.i,10));
+});
+$('#randBtn').addEventListener('click', randomPick);
+$('#clearBtn').addEventListener('click', clearSel);
+$('#fanCopy').addEventListener('click', ()=>{ const t=$('#fanText').textContent; if(t && !t.includes('再选')) copyText(t,'反方段'); });
+$('#tuiCopy').addEventListener('click', ()=>{ const t=$('#tuiText').textContent; if(t && !t.includes('对应的')) copyText(t,'推翻段'); });
+$('#themeBtn').addEventListener('click', ()=>{
+  theme = theme==='light'?'dark':'light';
+  localStorage.setItem('fanzuhe_theme', theme);
+  document.documentElement.setAttribute('data-theme', theme);
+  $('#icSun').style.display = theme==='dark'?'none':'block';
+  $('#icMoon').style.display = theme==='dark'?'block':'none';
+});
+
+document.documentElement.setAttribute('data-theme', theme);
+$('#icSun').style.display = theme==='dark'?'none':'block';
+$('#icMoon').style.display = theme==='dark'?'block':'none';
+renderChips(); build();
+</script>
+</body>
+</html>
